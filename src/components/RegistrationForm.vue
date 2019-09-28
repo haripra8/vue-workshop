@@ -5,18 +5,33 @@
         <h4 class="title">Register to create a new account</h4>
       </div>
       <div class="content">
-        <form>
+        <form @submit.prevent="handleSubmit">
           <div class="form-group">
             <label class="label" for="name">Name</label>
-            <input type="text" class="form-control" id="name" placeholder="name" required />
+            <input
+              v-model="name"
+              type="text"
+              class="form-control"
+              id="name"
+              placeholder="name"
+              required
+            />
           </div>
           <div class="form-group">
             <label class="label" for="email">Email address</label>
-            <input type="email" class="form-control" id="email" placeholder="email" required />
+            <input
+              v-model="email"
+              type="email"
+              class="form-control"
+              id="email"
+              placeholder="email"
+              required
+            />
           </div>
           <div class="form-group">
             <label class="label" for="password">Password</label>
             <input
+              v-model="word"
               type="password"
               class="form-control"
               id="password"
@@ -27,14 +42,52 @@
 
           <button type="submit" class="btn">Submit</button>
         </form>
+        <span class="message">{{message}}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
-  name: "RegistrationForm"
+  name: "RegistrationForm",
+  data() {
+    return {
+      name: "",
+      email: "",
+      word: "",
+      message: ""
+    };
+  },
+  methods: {
+    async handleSubmit() {
+      /* eslint-disable */
+      console.log("test submit");
+      try {
+        const response = axios.post(
+          "http://jsonplaceholder.typicode.com/posts",
+          {
+            name: this.name,
+            email: this.email,
+            password: this.word
+          }
+        );
+        if (response) {
+          this.message = "you are successfully registered!";
+          this.name = "";
+          this.email = "";
+          this.word = "";
+        } else {
+          this.message = "sorry you are not registered";
+        }
+        console.log(response);
+      } catch (error) {
+        this.message = "sorry there was a problem";
+        console.log(error.message);
+      }
+    }
+  }
 };
 </script>
 
