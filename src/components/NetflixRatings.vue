@@ -21,7 +21,7 @@
           <tbody>
             <tr v-for="(row1,index) in filteredMovies" :key="index">
               <td>{{row1.title}}</td>
-              <td>{{row1.rating}}</td>
+              <td>{{row1.rating}} {{isHighRated(row1.rating)}}</td>
             </tr>
           </tbody>
         </table>
@@ -71,6 +71,9 @@ export default {
       this.ratingsInfo.sort(
         this.ratingsInfo.sort((a, b) => (a.rating > b.rating ? -1 : 1))
       );
+    },
+    isHighRated(rating1) {
+      return rating1 >= 90 ? "high" : "low";
     }
   },
   computed: {
@@ -81,6 +84,16 @@ export default {
     }
   }
 };
+
+/*
+r=rating1;
+      t = "";
+      do {
+        t.concat("*");
+        r -= 20;
+      } while (r > 0);
+      return t;
+*/
 </script>
 
 <style scoped lang="scss">
