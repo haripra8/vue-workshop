@@ -2,10 +2,10 @@
   <div class="container">
     <div class="card">
       <div class="heading">
-        <h4 class="title">Netflix Ratings</h4>
+        <h4 class="title">Hacker News</h4>
       </div>
       <div class="search">
-        <input type="text" class="form-control" placeholder="Search by title" />
+        <input v-model="title" type="text" class="form-control" placeholder="Search by title" />
       </div>
       <div class="content">
         <div>
@@ -16,9 +16,9 @@
             <p></p>
           </div>
           <ul class="list">
-            <li>
-              <a href></a>
-              <span>By:</span>
+            <li v-for="(item1,index) in filteredNews" :key="index">
+              <a v-bind:href="item1.url">{{item1.title}}</a>
+              <span>By:{{item1.author}}</span>
             </li>
           </ul>
         </div>
@@ -28,8 +28,50 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
-  name: "HackerNews"
+  name: "HackerNews",
+  data() {
+    return {
+      news: [],
+      title: ""
+    };
+  },
+  async created() {
+    try {
+      const response = await axios.get("http://hn.algolia.com/api/v1/search");
+      this.news = response.data.hits;
+
+      /* eslint-disable */
+      console.log(this.news);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  computed: {
+    filteredNews() {
+      return this.news.filter(it1 => {
+        return it1.title;
+      });
+    }
+  },
+  watch: {
+    async title(value) {
+      try {
+        const response = await axios.get(
+          "http://hn.algolia.com/api/v1/search",
+          { params: { query: value } }
+        );
+        this.news = response.data.hits;
+
+        /* eslint-disable */
+        console.log(this.news);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  },
+  methods: {}
 };
 </script>
 
