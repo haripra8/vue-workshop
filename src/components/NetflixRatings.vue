@@ -5,23 +5,23 @@
         <div>
           <h4 class="title">Netflix Ratings</h4>
           <div class="actions">
-            <button class="btn">Lowest rated</button>
-            <button class="btn">Highest rated</button>
+            <button class="btn" @click="sortAsc">Lowest rated</button>
+            <button class="btn" @click="sortDesc">Highest rated</button>
           </div>
         </div>
         <div class="search">
-          <input type="text" class="form-control" placeholder="Search by title" />
+          <input v-model="title" type="text" class="form-control" placeholder="Search by title" />
         </div>
       </div>
       <div class="content">
         <table class="table">
           <thead>
-            <th></th>
+            <th v-for="(columnTitle,index) in columns" :key="index">{{columnTitle}}</th>
           </thead>
           <tbody>
-            <tr>
-              <td></td>
-              <td></td>
+            <tr v-for="(row1,index) in filteredMovies" :key="index">
+              <td>{{row1.title}}</td>
+              <td>{{row1.rating}}</td>
             </tr>
           </tbody>
         </table>
@@ -35,6 +35,7 @@ export default {
   name: "NetflixRatings",
   data: function() {
     return {
+      title: "",
       columns: ["title", "rating"],
       ratingsInfo: [
         { title: `Grey's Anatomy`, rating: 98 },
@@ -59,6 +60,25 @@ export default {
         { title: `Marvel's Iron Fist`, rating: 98 }
       ]
     };
+  },
+  methods: {
+    sortAsc() {
+      this.ratingsInfo.sort(
+        this.ratingsInfo.sort((a, b) => (a.rating > b.rating ? 1 : -1))
+      );
+    },
+    sortDesc() {
+      this.ratingsInfo.sort(
+        this.ratingsInfo.sort((a, b) => (a.rating > b.rating ? -1 : 1))
+      );
+    }
+  },
+  computed: {
+    filteredMovies() {
+      return this.ratingsInfo.filter(info => {
+        return info.title.toLowerCase().match(this.title.toLowerCase());
+      });
+    }
   }
 };
 </script>
